@@ -62,7 +62,7 @@ spec:
   duration: 2160h
   renewBefore: 360h
   dnsNames:
-    - pod-label-add.shubhindia.xyz
+    - pod-container-add.shubhindia.xyz
   isCA: false
   privateKey:
     algorithm: RSA

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: mutating-webhook
-          image: shubhindia/mutating-webhook:latest
+          image: shubhindia/k8s-mutating-webhook-experiments:v1
           imagePullPolicy: Always
           ports:
             - containerPort: 443
