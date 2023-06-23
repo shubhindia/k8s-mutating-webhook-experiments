@@ -1,0 +1,72 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: ca-bootstrap
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ca-root
+  namespace: cert-manager
+spec:
+  secretName: ca-root
+  isCA: true
+  commonName: ca-root
+  privateKey:
+    algorithm: RSA
+    size: 2048
+  issuerRef:
+    kind: ClusterIssuer
+    name: ca-bootstrap
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: ca-root
+spec:
+  ca:
+    secretName: ca-root
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: server
+spec:
+  issuerRef:
+    name: ca-root
+    kind: ClusterIssuer
+  secretName: server-cert
+  duration: 2160h
+  renewBefore: 360h
+  dnsNames:
+    - mutating-webhook.default.svc
+  isCA: false
+  privateKey:
+    algorithm: RSA
+    size: 2048
+  usages:
+    - client auth
+    - server auth
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: client
+spec:
+  issuerRef:
+    name: ca-root
+    kind: ClusterIssuer
+  secretName: client-cert
+  duration: 2160h
+  renewBefore: 360h
+  dnsNames:
+    - pod-label-add.shubhindia.xyz
+  isCA: false
+  privateKey:
+    algorithm: RSA
+    size: 2048
+  usages:
+    - client auth
+    - server auth
